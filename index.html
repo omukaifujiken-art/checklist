@@ -1,425 +1,73 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>施工管理 携帯品チェックリスト</title>
-<style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: #f0f4f8; font-family: 'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif; max-width: 480px; margin: 0 auto; min-height: 100vh; }
-.page { min-height: 100vh; }
-.hero-card { background:#fff; margin:20px; border-radius:20px; padding:40px 24px; text-align:center; box-shadow:0 4px 24px rgba(0,0,0,0.08); }
-.hero-emoji { font-size:64px; margin-bottom:12px; }
-.hero-title { font-size:26px; font-weight:800; color:#1a237e; line-height:1.3; margin-bottom:8px; }
-.hero-sub { font-size:14px; color:#888; margin-bottom:32px; }
-.btn-primary { display:block; width:100%; padding:16px 0; background:linear-gradient(135deg,#1a237e,#283593); color:#fff; border:none; border-radius:12px; font-size:17px; font-weight:700; cursor:pointer; margin-bottom:12px; }
-.btn-ghost { display:block; width:100%; padding:14px 0; background:transparent; color:#1a237e; border:2px solid #1a237e; border-radius:12px; font-size:15px; font-weight:600; cursor:pointer; margin-bottom:8px; }
-.btn-small { display:block; width:100%; padding:12px 0; background:transparent; color:#888; border:2px solid #ddd; border-radius:12px; font-size:13px; font-weight:600; cursor:pointer; }
-.form-header { display:flex; align-items:center; justify-content:space-between; padding:14px 16px; background:#1a237e; color:#fff; position:sticky; top:0; z-index:100; }
-.back-btn { background:none; border:none; color:#fff; font-size:14px; cursor:pointer; }
-.header-title { font-size:16px; font-weight:700; }
-.badge { background:#fff; color:#1a237e; border-radius:20px; padding:2px 10px; font-size:13px; font-weight:700; }
-.progress-bg { height:4px; background:#c5cae9; }
-.progress-fill { height:100%; background:#4caf50; transition:width 0.3s; }
-.form-body { padding:12px; }
-.meta-card { background:#fff; border-radius:14px; padding:16px; margin-bottom:12px; box-shadow:0 1px 6px rgba(0,0,0,0.06); }
-label { font-size:13px; color:#555; font-weight:600; margin-bottom:6px; display:block; margin-top:10px; }
-label:first-child { margin-top:0; }
-.req { color:#e53935; }
-input[type=text], input[type=date], input[type=password] { width:100%; padding:11px 12px; border:1.5px solid #e0e0e0; border-radius:10px; font-size:15px; margin-bottom:4px; outline:none; font-family:inherit; }
-.section-card { background:#fff; border-radius:14px; margin-bottom:12px; overflow:hidden; box-shadow:0 1px 6px rgba(0,0,0,0.06); }
-.section-header { display:flex; align-items:center; gap:8px; padding:12px 16px; background:#e8eaf6; border-bottom:1px solid #c5cae9; }
-.section-emoji { font-size:20px; }
-.section-title { font-size:14px; font-weight:700; color:#1a237e; }
-.check-row { display:flex; align-items:center; gap:12px; padding:12px 16px; border-bottom:1px solid #f5f5f5; cursor:pointer; transition:background 0.15s; }
-.check-row.checked { background:#e8f5e9; }
-.checkbox { width:24px; height:24px; border-radius:6px; border:2px solid #bbb; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all 0.15s; background:#fff; }
-.checkbox.checked { background:#2e7d32; border-color:#2e7d32; }
-.checkmark { color:#fff; font-size:14px; font-weight:900; display:none; }
-.checkbox.checked .checkmark { display:block; }
-.check-label { font-size:14px; line-height:1.5; flex:1; color:#333; }
-.check-row.checked .check-label { color:#1b5e20; text-decoration:line-through; }
-.notes-area { padding:12px 16px; background:#fafafa; border-top:1px solid #f0f0f0; }
-.notes-label { font-size:12px; color:#888; margin-bottom:8px; font-weight:600; }
-.note-input { width:100%; padding:9px 11px; border:1px solid #e0e0e0; border-radius:8px; font-size:14px; margin-bottom:7px; font-family:inherit; outline:none; }
-.error-msg { color:#c62828; font-size:13px; text-align:center; margin-bottom:12px; }
-.empty-state { text-align:center; padding:60px 20px; }
-.count-text { font-size:13px; color:#888; margin-bottom:12px; text-align:center; }
-.response-card { background:#fff; border-radius:12px; padding:14px 16px; margin-bottom:10px; box-shadow:0 1px 6px rgba(0,0,0,0.06); cursor:pointer; }
-.response-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; }
-.response-name { font-size:16px; font-weight:700; color:#1a237e; }
-.response-score { font-size:14px; color:#555; }
-.response-date { font-size:12px; color:#888; }
-.score-badge { color:#fff; border-radius:20px; padding:2px 10px; font-size:13px; font-weight:700; }
-.meta-line { font-size:14px; color:#444; margin-bottom:6px; }
-.note-display { font-size:13px; color:#555; margin-bottom:4px; }
-.step-card { background:#fff; border-radius:14px; padding:16px; margin-bottom:12px; box-shadow:0 1px 6px rgba(0,0,0,0.06); }
-.step-num { font-size:11px; font-weight:800; color:#1a237e; background:#e8eaf6; display:inline-block; padding:2px 8px; border-radius:6px; margin-bottom:6px; }
-.step-title { font-size:15px; font-weight:700; color:#222; margin-bottom:8px; }
-.hidden { display:none !important; }
-#app { min-height:100vh; }
-</style>
-</head>
-<body>
-<div id="app"></div>
-
-<script>
-const GAS_URL_KEY = "reform_gas_url";
-const ADMIN_PASS_KEY = "reform_admin_pass_temp";
+const PASS = "admin1234";
 
 const SECTIONS = [
-  { id:"documents", emoji:"📋", title:"書類・図面類", items:["設計図面・施工図（最新版）","工程表","仕様書・機器仕様書（設備機器のカタログ含む）","工事写真記録"] },
-  { id:"measurement", emoji:"🔧", title:"計測・確認ツール", items:["スケール（コンベックス）","水平器（レベル）","下地センサー（壁裏探知機）","検電器（テスター）"] },
-  { id:"plumbing", emoji:"🚿", title:"水回り特有の確認グッズ", items:["シールテープ（簡易確認・応急用）","懐中電灯・ヘッドライト（床下・点検口の確認）","鏡（狭所の目視確認）","ウエットシート（水濡れ・汚れ拭き）"] },
-  { id:"interior", emoji:"🖌️", title:"内装工事特有の確認グッズ", items:["色見本帳・サンプル（クロス・塗装）","目視確認用ライト（クロスの浮き・塗りムラ確認）"] },
-  { id:"tools", emoji:"🔨", title:"工具", items:["インパクトドライバー","プラスドライバー・マイナスドライバー","六角レンチ","マスキングテープ","リペアキット","はさみ","カッター","ポケットライト","クロスコーク"] },
-  { id:"cleaning", emoji:"🧹", title:"掃除道具", items:["ほうき","チリトリ","ハンディ掃除機","糊剥がし","油取りペーパー","アルコール"] },
-  { id:"digital", emoji:"📱", title:"デジタル機器", items:["タブレット（図面表示・写真記録用）"] },
-  { id:"stationery", emoji:"✏️", title:"筆記・記録用具", items:["メモ帳・ノート","ボールペン・マーカー（複数色）","クリップボード","付箋"] },
-  { id:"safety", emoji:"🦺", title:"安全保護具", items:["ヘルメット","安全靴","作業手袋（薄手ゴム手袋も）","防塵マスク（解体・ボード作業時）"] },
-  { id:"sales", emoji:"📣", title:"営業・顧客対応備品", items:["アンケート","紹介チラシ","クチコミチラシ"] },
-  { id:"other", emoji:"💊", title:"その他", items:["名刺","救急セット（絆創膏など）"] },
+  { id:"documents", title:"書類・図面類", items:["設計図面・施工図（最新版）","工程表","仕様書・機器仕様書","工事写真記録"] },
+  { id:"measurement", title:"計測・確認ツール", items:["スケール（コンベックス）","水平器（レベル）","下地センサー（壁裏探知機）","検電器（テスター）"] },
+  { id:"plumbing", title:"水回り特有の確認グッズ", items:["シールテープ","懐中電灯・ヘッドライト","鏡（狭所の目視確認）","ウエットシート"] },
+  { id:"interior", title:"内装工事特有の確認グッズ", items:["色見本帳・サンプル","目視確認用ライト"] },
+  { id:"tools", title:"工具", items:["インパクトドライバー","プラス・マイナスドライバー","六角レンチ","マスキングテープ","リペアキット","はさみ","カッター","ポケットライト","クロスコーク"] },
+  { id:"cleaning", title:"掃除道具", items:["ほうき","チリトリ","ハンディ掃除機","糊剥がし","油取りペーパー","アルコール"] },
+  { id:"digital", title:"デジタル機器", items:["タブレット"] },
+  { id:"stationery", title:"筆記・記録用具", items:["メモ帳・ノート","ボールペン・マーカー","クリップボード","付箋"] },
+  { id:"safety", title:"安全保護具", items:["ヘルメット","安全靴","作業手袋","防塵マスク"] },
+  { id:"sales", title:"営業・顧客対応備品", items:["アンケート","紹介チラシ","クチコミチラシ"] },
+  { id:"other", title:"その他", items:["名刺","救急セット"] },
 ];
 
-const TOTAL = SECTIONS.reduce((s,sec)=>s+sec.items.length,0);
-
-// State
-let state = {
-  screen: "home",
-  gasUrl: localStorage.getItem(GAS_URL_KEY) || "",
-  gasUrlInput: localStorage.getItem(GAS_URL_KEY) || "",
-  name: "",
-  date: new Date().toISOString().slice(0,10),
-  checks: initChecks(),
-  notes: initNotes(),
-  submitting: false,
-  submitted: false,
-  submitError: "",
-  adminPass: "",
-  adminError: "",
-  loading: false,
-  responses: null,
-  selected: null,
-};
-
-function initChecks() {
-  const c={};
-  SECTIONS.forEach(s=>s.items.forEach((_,i)=>{ c[s.id+"_"+i]=false; }));
-  return c;
-}
-function initNotes() {
-  const n={};
-  SECTIONS.forEach(s=>{ n[s.id]=["","",""]; });
-  return n;
-}
-
-function setState(patch) {
-  Object.assign(state, patch);
-  render();
-}
-
-function checkedCount() {
-  return Object.values(state.checks).filter(Boolean).length;
-}
-
-// GAS API
-async function submitToGAS(entry) {
-  const res = await fetch(state.gasUrl, { method:"POST", body:JSON.stringify(entry) });
-  const json = await res.json();
-  if(json.status!=="ok") throw new Error(json.message||"GASエラー");
-}
-async function fetchFromGAS(pass) {
-  const res = await fetch(state.gasUrl+"?pass="+encodeURIComponent(pass));
-  const json = await res.json();
-  if(json.status!=="ok") throw new Error(json.message||"認証エラー");
-  return json.data;
-}
-
-// Render
-function render() {
-  const app = document.getElementById("app");
-  const gasReady = state.gasUrl.startsWith("https://");
-
-  if(!gasReady) { app.innerHTML = renderSetup(); bindSetup(); return; }
-  if(state.screen==="home") { app.innerHTML = renderHome(); bindHome(); return; }
-  if(state.screen==="form") { app.innerHTML = state.submitted ? renderDone() : renderForm(); bindForm(); return; }
-  if(state.screen==="admin") { app.innerHTML = renderAdmin(); bindAdmin(); return; }
-  if(state.screen==="detail") { app.innerHTML = renderDetail(); bindDetail(); return; }
-}
-
-// ── SETUP ──
-function renderSetup() {
-  return `<div class="page">
-  <div class="hero-card">
-    <div class="hero-emoji">⚙️</div>
-    <h1 class="hero-title">GAS URLを設定してください</h1>
-    <p class="hero-sub">Google Apps ScriptのウェブアプリURLを入力すると<br>複数スマホから集計できます</p>
-  </div>
-  <div style="padding:0 16px 40px">
-    <div class="step-card">
-      <div class="step-num">設定</div>
-      <div class="step-title">GASウェブアプリURLを入力</div>
-      <input type="text" id="gasInput" placeholder="https://script.google.com/macros/s/..." value="${esc(state.gasUrlInput)}" style="margin-top:12px;font-size:13px">
-      <button class="btn-primary" id="saveUrlBtn" style="margin-top:8px" ${state.gasUrlInput.startsWith("https://")?"":"disabled opacity:.4"}>URLを保存して開始</button>
-      <p style="font-size:12px;color:#888;text-align:center;margin-top:8px">※ GASの設定方法がわからない場合はご連絡ください</p>
-    </div>
-  </div>
-</div>`;
-}
-function bindSetup() {
-  const inp = document.getElementById("gasInput");
-  const btn = document.getElementById("saveUrlBtn");
-  inp.addEventListener("input", e=>{
-    const v = e.target.value;
-    state.gasUrlInput = v;
-    btn.disabled = !v.startsWith("https://");
-    btn.style.opacity = v.startsWith("https://") ? 1 : 0.4;
-  });
-  btn.addEventListener("click", ()=>{
-    localStorage.setItem(GAS_URL_KEY, state.gasUrlInput);
-    setState({ gasUrl: state.gasUrlInput, screen:"home" });
-  });
-}
-
-// ── HOME ──
-function renderHome() {
-  return `<div class="page">
-  <div class="hero-card">
-    <div class="hero-emoji">🏗️</div>
-    <h1 class="hero-title">施工管理<br>携帯品チェックリスト</h1>
-    <p class="hero-sub">水回り・内装工事対応</p>
-    <button class="btn-primary" id="startBtn">チェックを開始する</button>
-    <button class="btn-ghost" id="adminBtn">📊 回答を集計する（管理者）</button>
-    <button class="btn-small" id="settingsBtn">⚙️ GAS URLを変更する</button>
-  </div>
-</div>`;
-}
-function bindHome() {
-  document.getElementById("startBtn").onclick = ()=>setState({screen:"form"});
-  document.getElementById("adminBtn").onclick = ()=>setState({screen:"admin", responses:null, adminPass:"", adminError:""});
-  document.getElementById("settingsBtn").onclick = ()=>setState({gasUrl:"", gasUrlInput: state.gasUrl});
-}
-
-// ── FORM ──
-function renderForm() {
-  const cnt = checkedCount();
-  const pct = Math.round(cnt/TOTAL*100);
-  let sectionsHtml = SECTIONS.map(sec=>{
-    const items = sec.items.map((item,i)=>{
-      const key=sec.id+"_"+i;
-      const on=state.checks[key];
-      return `<div class="check-row ${on?'checked':''}" data-key="${key}">
-        <div class="checkbox ${on?'checked':''}"><span class="checkmark">✓</span></div>
-        <span class="check-label">${esc(item)}</span>
-      </div>`;
-    }).join("");
-    const noteInputs = [0,1,2].map(li=>`<input class="note-input" data-sid="${sec.id}" data-li="${li}" placeholder="メモ ${li+1}" value="${esc(state.notes[sec.id][li]||'')}">`).join("");
-    return `<div class="section-card">
-      <div class="section-header"><span class="section-emoji">${sec.emoji}</span><span class="section-title">${esc(sec.title)}</span></div>
-      ${items}
-      <div class="notes-area"><p class="notes-label">📝 メモ（自由記入）</p>${noteInputs}</div>
-    </div>`;
-  }).join("");
-
-  return `<div class="page">
-  <div class="form-header">
-    <button class="back-btn" id="backBtn">← 戻る</button>
-    <span class="header-title">携帯品チェック</span>
-    <span class="badge">${pct}%</span>
-  </div>
-  <div class="progress-bg"><div class="progress-fill" style="width:${pct}%"></div></div>
-  <div class="form-body">
-    <div class="meta-card">
-      <label>担当者名 <span class="req">*</span></label>
-      <input type="text" id="nameInput" placeholder="例：山田 太郎" value="${esc(state.name)}">
-      <label>日付</label>
-      <input type="date" id="dateInput" value="${state.date}">
-    </div>
-    ${sectionsHtml}
-    ${state.submitError?`<p class="error-msg">⚠️ ${esc(state.submitError)}</p>`:""}
-    <button class="btn-primary" id="submitBtn" ${!state.name.trim()||state.submitting?"disabled style='opacity:.5'":""}>
-      ${state.submitting?"送信中…":"✅ 送信する"}
-    </button>
-    <div style="height:40px"></div>
-  </div>
-</div>`;
-}
-function bindForm() {
-  if(state.submitted) return;
-  document.getElementById("backBtn")?.addEventListener("click",()=>setState({screen:"home"}));
-  document.getElementById("nameInput")?.addEventListener("input",e=>{ state.name=e.target.value; updateProgress(); updateSubmitBtn(); });
-  document.getElementById("dateInput")?.addEventListener("change",e=>{ state.date=e.target.value; });
-  document.querySelectorAll(".check-row").forEach(row=>{
-    row.addEventListener("click",()=>{
-      const key=row.dataset.key;
-      state.checks[key]=!state.checks[key];
-      row.classList.toggle("checked",state.checks[key]);
-      row.querySelector(".checkbox").classList.toggle("checked",state.checks[key]);
-      updateProgress();
+function doPost(e) {
+  try {
+    const data = JSON.parse(e.postData.contents);
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const sheet = ss.getSheetByName("回答") || ss.insertSheet("回答");
+    if (sheet.getLastRow() === 0) {
+      const headers = ["送信日時","担当者名","日付","確認数","合計"];
+      SECTIONS.forEach(sec => {
+        sec.items.forEach(item => headers.push(sec.title + "｜" + item));
+        headers.push(sec.title + "｜メモ1");
+        headers.push(sec.title + "｜メモ2");
+        headers.push(sec.title + "｜メモ3");
+      });
+      sheet.appendRow(headers);
+    }
+    const row = [data.submittedAt, data.name, data.date, data.checkedCount, data.totalItems];
+    SECTIONS.forEach(sec => {
+      sec.items.forEach((_, i) => {
+        row.push(data.checks[sec.id + "_" + i] ? "✓" : "");
+      });
+      const notes = data.notes[sec.id] || ["","",""];
+      row.push(notes[0]||"", notes[1]||"", notes[2]||"");
     });
-  });
-  document.querySelectorAll(".note-input").forEach(inp=>{
-    inp.addEventListener("click",e=>e.stopPropagation());
-    inp.addEventListener("input",e=>{
-      state.notes[e.target.dataset.sid][parseInt(e.target.dataset.li)]=e.target.value;
-    });
-  });
-  document.getElementById("submitBtn")?.addEventListener("click", async ()=>{
-    if(!state.name.trim()||state.submitting) return;
-    setState({submitting:true, submitError:""});
-    try {
-      const cnt=checkedCount();
-      await submitToGAS({ name:state.name.trim(), date:state.date, checks:state.checks, notes:state.notes, checkedCount:cnt, totalItems:TOTAL, submittedAt:new Date().toISOString() });
-      setState({submitted:true, submitting:false});
-    } catch(e) { setState({submitting:false, submitError:e.message}); }
-  });
-}
-function updateProgress() {
-  const cnt=checkedCount(); const pct=Math.round(cnt/TOTAL*100);
-  const fill=document.querySelector(".progress-fill");
-  const badge=document.querySelector(".badge");
-  if(fill) fill.style.width=pct+"%";
-  if(badge) badge.textContent=pct+"%";
-}
-function updateSubmitBtn() {
-  const btn=document.getElementById("submitBtn");
-  if(!btn) return;
-  btn.disabled=!state.name.trim();
-  btn.style.opacity=state.name.trim()?1:0.5;
-}
-
-// ── DONE ──
-function renderDone() {
-  const cnt=checkedCount();
-  return `<div class="page">
-  <div class="hero-card">
-    <div class="hero-emoji">✅</div>
-    <h2 class="hero-title">送信完了！</h2>
-    <p class="hero-sub">${cnt} / ${TOTAL} 項目を確認</p>
-    <p style="font-size:13px;color:#555;margin-bottom:24px">Googleスプレッドシートに記録されました</p>
-    <button class="btn-primary" id="resetBtn">トップへ戻る</button>
-  </div>
-</div>`;
-}
-
-// ── ADMIN ──
-function renderAdmin() {
-  let inner="";
-  if(state.responses===null) {
-    inner=`<div class="meta-card">
-      <label>管理者パスワード</label>
-      <input type="password" id="passInput" placeholder="パスワードを入力" value="${esc(state.adminPass)}">
-      ${state.adminError?`<p style="color:#c62828;font-size:13px;margin-bottom:8px">⚠️ ${esc(state.adminError)}</p>`:""}
-      <button class="btn-primary" id="loginBtn" ${state.loading?"disabled style='opacity:.5'":""}>
-        ${state.loading?"取得中…":"集計データを取得"}
-      </button>
-    </div>`;
-  } else if(state.loading) {
-    inner=`<p style="text-align:center;color:#888;padding:40px">読み込み中…</p>`;
-  } else if(state.responses.length===0) {
-    inner=`<div class="empty-state"><div style="font-size:48px">📭</div><p style="color:#888">まだ回答がありません</p></div>`;
-  } else {
-    const cards=[...state.responses].reverse().map((r,idx)=>{
-      const pct=Math.round(Number(r["確認数"])/Number(r["合計"])*100);
-      const bg=pct===100?"#2e7d32":"#f57c00";
-      return `<div class="response-card" data-idx="${state.responses.length-1-idx}">
-        <div class="response-row"><span class="response-name">${esc(r["担当者名"])}</span><span class="response-score">${r["確認数"]}/${r["合計"]}</span></div>
-        <div class="response-row"><span class="response-date">${esc(String(r["日付"]))}　${esc(String(r["送信日時"]).slice(0,16).replace("T"," "))}</span><span class="score-badge" style="background:${bg}">${pct}%</span></div>
-      </div>`;
-    }).join("");
-    inner=`<p class="count-text">合計 ${state.responses.length} 件の回答</p>${cards}`;
+    sheet.appendRow(row);
+    return ContentService.createTextOutput(JSON.stringify({ status: "ok" }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch(err) {
+    return ContentService.createTextOutput(JSON.stringify({ status: "error", message: err.message }))
+      .setMimeType(ContentService.MimeType.JSON);
   }
-  return `<div class="page">
-  <div class="form-header">
-    <button class="back-btn" id="backBtn">← 戻る</button>
-    <span class="header-title">回答集計</span>
-    ${state.responses!==null?`<button class="back-btn" id="refreshBtn" style="font-size:12px">🔄 更新</button>`:"<span></span>"}
-  </div>
-  <div class="form-body">${inner}</div>
-</div>`;
 }
-function bindAdmin() {
-  document.getElementById("backBtn").onclick=()=>setState({screen:"home",responses:null,adminPass:"",adminError:""});
-  document.getElementById("refreshBtn")?.addEventListener("click", async ()=>{
-    setState({loading:true});
-    try { const data=await fetchFromGAS(state.adminPass); setState({responses:data,loading:false}); }
-    catch { setState({loading:false}); }
-  });
-  document.getElementById("passInput")?.addEventListener("input",e=>{ state.adminPass=e.target.value; });
-  document.getElementById("passInput")?.addEventListener("keydown",e=>{ if(e.key==="Enter") document.getElementById("loginBtn")?.click(); });
-  document.getElementById("loginBtn")?.addEventListener("click", async ()=>{
-    setState({loading:true,adminError:""});
-    try { const data=await fetchFromGAS(state.adminPass); setState({responses:data,loading:false}); }
-    catch(e) { setState({adminError:e.message,loading:false}); }
-  });
-  document.querySelectorAll(".response-card").forEach(card=>{
-    card.addEventListener("click",()=>{
-      const idx=parseInt(card.dataset.idx);
-      setState({selected:state.responses[idx], screen:"detail"});
+
+function doGet(e) {
+  try {
+    if (e.parameter.pass !== PASS) {
+      return ContentService.createTextOutput(JSON.stringify({ status: "error", message: "パスワードが違います" }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("回答");
+    if (!sheet || sheet.getLastRow() <= 1) {
+      return ContentService.createTextOutput(JSON.stringify({ status: "ok", data: [] }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+    const rows = sheet.getDataRange().getValues();
+    const headers = rows[0];
+    const data = rows.slice(1).map(r => {
+      const obj = {};
+      headers.forEach((h, i) => obj[h] = r[i]);
+      return obj;
     });
-  });
+    return ContentService.createTextOutput(JSON.stringify({ status: "ok", data }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch(err) {
+    return ContentService.createTextOutput(JSON.stringify({ status: "error", message: err.message }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
 }
-
-// ── DETAIL ──
-function renderDetail() {
-  const r=state.selected;
-  const pct=Math.round(Number(r["確認数"])/Number(r["合計"])*100);
-  const checks2=r["チェック詳細"]||{};
-  const notes2=r["メモ詳細"]||{};
-  const sections=SECTIONS.map(sec=>{
-    const items=sec.items.map((item,i)=>{
-      const on=checks2[sec.id+"_"+i];
-      return `<div class="check-row ${on?'checked':''}" style="cursor:default">
-        <div class="checkbox ${on?'checked':''}"><span class="checkmark">✓</span></div>
-        <span class="check-label" style="color:${on?"#1b5e20":"#999"}">${esc(item)}</span>
-      </div>`;
-    }).join("");
-    const ns=(notes2[sec.id]||[]).filter(n=>n?.trim());
-    const noteHtml=ns.length?`<div class="notes-area"><p class="notes-label">📝 メモ</p>${ns.map(n=>`<p class="note-display">• ${esc(n)}</p>`).join("")}</div>`:"";
-    return `<div class="section-card">
-      <div class="section-header"><span class="section-emoji">${sec.emoji}</span><span class="section-title">${esc(sec.title)}</span></div>
-      ${items}${noteHtml}
-    </div>`;
-  }).join("");
-  return `<div class="page">
-  <div class="form-header">
-    <button class="back-btn" id="backBtn">← 戻る</button>
-    <span class="header-title">${esc(r["担当者名"])}</span>
-    <span class="badge">${pct}%</span>
-  </div>
-  <div class="form-body">
-    <div class="meta-card">
-      <p class="meta-line">👤 ${esc(r["担当者名"])}</p>
-      <p class="meta-line">📅 ${esc(String(r["日付"]))}</p>
-      <p class="meta-line">✅ ${r["確認数"]} / ${r["合計"]} 項目確認済み</p>
-    </div>
-    ${sections}
-    <div style="height:40px"></div>
-  </div>
-</div>`;
-}
-function bindDetail() {
-  document.getElementById("backBtn").onclick=()=>setState({screen:"admin"});
-}
-
-function bindForm_done() {
-  document.getElementById("resetBtn")?.addEventListener("click",()=>{
-    setState({checks:initChecks(),notes:initNotes(),name:"",date:new Date().toISOString().slice(0,10),submitted:false,submitError:"",screen:"home"});
-  });
-}
-
-function esc(s) {
-  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-}
-
-// Override render to handle done screen binding
-const _render = render;
-render = function() {
-  _render();
-  if(state.submitted) bindForm_done();
-};
-
-render();
-</script>
-</body>
-</html>
