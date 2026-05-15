@@ -71,3 +71,65 @@ function doGet(e) {
       .setMimeType(ContentService.MimeType.JSON);
   }
 }
+
+function 集計シートを作成() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const rawSheet = ss.getSheetByName("回答");
+  if (!rawSheet || rawSheet.getLastRow() <= 1) return;
+
+  // 既存の集計シートを削除して作り直す
+  const old = ss.getSheetByName("集計");
+  if (old) ss.deleteSheet(old);
+  const sheet = ss.insertSheet("集計");
+
+  const rows = rawSheet.getDataRange().getValues();
+  const headers = rows[0];
+  const data = rows.slice(1);
+
+  // ヘッダー行（項目列 + 担当者ごとの列）
+  const colHeaders = ["項目", ...data.map(r => r[1] + "\n" + String(r[2]).slice(0, 10))];
+  sheet.appendRow(colHeaders);
+
+  // 項目ごとに1行ずつ（列5以降がチェック・メモ項目）
+  for (let col = 5; col < headers.length; col++) {
+    const row = [headers[col]];
+    data.forEach(r => row.push(r[col] || ""));
+    sheet.appendRow(row);
+  }
+
+  // 列幅・行固定
+  sheet.setFrozenRows(1);
+  sheet.setFrozenColumns(1);
+  sheet.setColumnWidth(1, 220);
+  for (let c = 2; c <= sheet.getLastColumn(); c++) {
+    sheet.setColumnWidth(c, 90);
+  }
+
+  // 全体を中央揃え、項目列だけ左揃え
+  sheet.getRange(1, 1, sheet.getLastRow(), sheet.getLastColumn()).setHorizontalAlignment("center");
+  sheet.getRange(1, 1, sheet.getLastRow(), 1).setHorizontalAlignment("left");
+
+  // ✓のセルを緑、空白を薄赤に色付け
+  for (let ri = 2; ri <= sheet.getLastRow(); ri++) {
+    const label = String(sheet.getRange(ri, 1).getValue());
+    // メモ行はスキップ（色付けしない）
+    if (label.includes("メモ")) continue;
+    for (let ci = 2; ci <= sheet.getLastColumn(); ci++) {
+      const val = sheet.getRange(ri, ci).getValue();
+      if (val === "✓") {
+        sheet.getRange(ri, ci).setBackground("#c8e6c9"); // 緑
+      } else {
+        sheet.getRange(ri, ci).setBackground("#ffcdd2"); // 薄赤（未チェック）
+      }
+    }
+  }
+
+  // ヘッダー行をネイビーに
+  sheet.getRange(1, 1, 1, sheet.getLastColumn())
+    .setBackground("#1a237e")
+    .setFontColor("#ffffff")
+    .setFontWeight("bold");
+
+  // 集計シートをアクティブに
+  ss.setActiveSheet(sheet);
+}
