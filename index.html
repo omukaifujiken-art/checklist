@@ -138,10 +138,44 @@ async function submitToGAS(entry) {
   // no-corsでは成功・失敗に関わらず送信は完了している
 }
 async function fetchFromGAS(pass) {
-  const res = await fetch(state.gasUrl+"?pass="+encodeURIComponent(pass));
-  const json = await res.json();
-  if(json.status!=="ok") throw new Error(json.message||"認証エラー");
-  return json.data;
+  // GETはno-corsが使えないのでJSONPで代替
+  return new Promise((resolve, reject) => {
+    const cbName = "cb_" + Date.now();
+    const script = document.createElement("script");
+    const timeout = setTimeout(() => {
+      delete window[cbName];
+      document.body.removeChild(script);
+      // フォールバック：通常fetchを試みる
+      fetch(state.gasUrl+"?pass="+encodeURIComponent(pass)+"&callback="+cbName)
+        .then(r=>r.json())
+        .then(json=>{
+          if(json.status!=="ok") reject(new Error(json.message||"認証エラー"));
+          else resolve(json.data);
+        })
+        .catch(()=>reject(new Error("データ取得に失敗しました")));
+    }, 5000);
+    window[cbName] = (json) => {
+      clearTimeout(timeout);
+      delete window[cbName];
+      document.body.removeChild(script);
+      if(json.status!=="ok") reject(new Error(json.message||"認証エラー"));
+      else resolve(json.data);
+    };
+    script.src = state.gasUrl+"?pass="+encodeURIComponent(pass)+"&callback="+cbName;
+    script.onerror = () => {
+      clearTimeout(timeout);
+      delete window[cbName];
+      // scriptエラー時は通常fetchを試みる
+      fetch(state.gasUrl+"?pass="+encodeURIComponent(pass))
+        .then(r=>r.json())
+        .then(json=>{
+          if(json.status!=="ok") reject(new Error(json.message||"認証エラー"));
+          else resolve(json.data);
+        })
+        .catch(()=>reject(new Error("データ取得に失敗しました")));
+    };
+    document.body.appendChild(script);
+  });
 }
 
 // Render
