@@ -448,3 +448,20 @@ render();
 </script>
 </body>
 </html>
+function テスト送信() {
+  const testData = {
+    name: "テスト",
+    date: "2026-05-17",
+    checks: {"documents_0": true},
+    notes: {"documents": ["","",""]},
+    checkedCount: 1,
+    totalItems: 43,
+    submittedAt: new Date().toISOString()
+  };
+  
+  const sheet = SpreadsheetApp.getActiveSpreadsheet()
+    .getSheetByName("回答") || SpreadsheetApp.getActiveSpreadsheet().insertSheet("回答");
+  
+  Logger.log("シート名: " + sheet.getName());
+  Logger.log("行数: " + sheet.getLastRow());
+}
