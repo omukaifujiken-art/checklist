@@ -368,18 +368,19 @@ function bindAdmin() {
 function renderDetail() {
   const r=state.selected;
   const pct=Math.round(Number(r["確認数"])/Number(r["合計"])*100);
-  const checks2=r["チェック詳細"]||{};
-  const notes2=r["メモ詳細"]||{};
   const sections=SECTIONS.map(sec=>{
-    const items=sec.items.map((item,i)=>{
-      const on=checks2[sec.id+"_"+i];
+    const items=sec.items.map((item)=>{
+      // 新形式：「カテゴリ名｜項目名」がキー
+      const key=sec.title+"｜"+item;
+      const on=r[key]==="✓";
       return `<div class="check-row ${on?'checked':''}" style="cursor:default">
         <div class="checkbox ${on?'checked':''}"><span class="checkmark">✓</span></div>
         <span class="check-label" style="color:${on?"#1b5e20":"#999"}">${esc(item)}</span>
       </div>`;
     }).join("");
-    const ns=(notes2[sec.id]||[]).filter(n=>n?.trim());
-    const noteHtml=ns.length?`<div class="notes-area"><p class="notes-label">📝 メモ</p>${ns.map(n=>`<p class="note-display">• ${esc(n)}</p>`).join("")}</div>`:"";
+    // メモを取得
+    const memos=[r[sec.title+"｜メモ1"],r[sec.title+"｜メモ2"],r[sec.title+"｜メモ3"]].filter(n=>n&&String(n).trim());
+    const noteHtml=memos.length?`<div class="notes-area"><p class="notes-label">📝 メモ</p>${memos.map(n=>`<p class="note-display">• ${esc(String(n))}</p>`).join("")}</div>`:"";
     return `<div class="section-card">
       <div class="section-header"><span class="section-emoji">${sec.emoji}</span><span class="section-title">${esc(sec.title)}</span></div>
       ${items}${noteHtml}
