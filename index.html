@@ -86,8 +86,8 @@ const TOTAL = SECTIONS.reduce((s,sec)=>s+sec.items.length,0);
 // State
 let state = {
   screen: "home",
-  gasUrl: localStorage.getItem(GAS_URL_KEY) || "https://script.google.com/macros/s/AKfycbywmYE9TP0dCE_15D72dcXXn5wYQ1dNxDX15J_gBBPCnSn032lCVSrmpOvDqN5pu_4uHQ/exec",
-  gasUrlInput: localStorage.getItem(GAS_URL_KEY) || "https://script.google.com/macros/s/AKfycbywmYE9TP0dCE_15D72dcXXn5wYQ1dNxDX15J_gBBPCnSn032lCVSrmpOvDqN5pu_4uHQ/exec",
+  gasUrl: localStorage.getItem(GAS_URL_KEY) || "https://script.google.com/macros/s/AKfycbxrdz7aecpjO4P4TvewW04uMqH5Bdbm1Tj8-jNi5F4OqDjUHL7CNpByudqPlMkMDve78g/exec",
+  gasUrlInput: localStorage.getItem(GAS_URL_KEY) || "https://script.google.com/macros/s/AKfycbxrdz7aecpjO4P4TvewW04uMqH5Bdbm1Tj8-jNi5F4OqDjUHL7CNpByudqPlMkMDve78g/exec",
   name: "",
   date: new Date().toISOString().slice(0,10),
   checks: initChecks(),
