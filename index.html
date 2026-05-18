@@ -125,27 +125,16 @@ function checkedCount() {
 
 // GAS API
 async function submitToGAS(entry) {
-  // GETリクエスト＋クエリパラメータでCORSを回避
-  const params = new URLSearchParams({
-    action: "submit",
-    data: JSON.stringify(entry)
-  });
-  return new Promise((resolve) => {
-    const script = document.createElement("script");
-    const cbName = "gasSubmitCb_" + Date.now();
-    window[cbName] = function() {
-      delete window[cbName];
-      document.body.removeChild(script);
-      resolve();
-    };
-    script.onerror = function() {
-      delete window[cbName];
-      document.body.removeChild(script);
-      resolve(); // エラーでも完了扱い
-    };
-    script.src = state.gasUrl + "?" + params.toString() + "&callback=" + cbName;
-    document.body.appendChild(script);
-  });
+  try {
+    await fetch(state.gasUrl, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify(entry)
+    });
+  } catch(e) {
+    console.warn("submit warn:", e);
+  }
 }
 async function fetchFromGAS(pass) {
   const res = await fetch(state.gasUrl+"?pass="+encodeURIComponent(pass), {
