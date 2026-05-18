@@ -125,16 +125,11 @@ function checkedCount() {
 
 // GAS API
 async function submitToGAS(entry) {
-  try {
-    await fetch(state.gasUrl, {
-      method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "text/plain" },
-      body: JSON.stringify(entry)
-    });
-  } catch(e) {
-    console.warn("submit warn:", e);
-  }
+  const encoded = encodeURIComponent(JSON.stringify(entry));
+  const url = state.gasUrl + "?action=submit&data=" + encoded;
+  const res = await fetch(url, { mode: "cors" });
+  const json = await res.json();
+  if (json.status !== "ok") throw new Error(json.message || "送信エラー");
 }
 async function fetchFromGAS(pass) {
   const res = await fetch(state.gasUrl+"?pass="+encodeURIComponent(pass), {
